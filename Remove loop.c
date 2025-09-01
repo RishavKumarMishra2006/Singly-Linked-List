@@ -13,12 +13,21 @@ struct Node* newNode(int data) {
     node->next = NULL;
     return node;
 }
-bool detectLoop(struct Node* head) {
+void removeLoop(struct Node* head) {
     struct Node* slow = head, *fast = head;
+    bool loopFound = false;
+
     while (fast && fast->next) {
         slow = slow->next;
         fast = fast->next->next;
-        if (slow == fast) return true;
+        if (slow == fast) { loopFound = true; break; }
     }
-    return false;
+    if (!loopFound) return;
+
+    slow = head;
+    while (slow->next != fast->next) {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    fast->next = NULL; // break loop
 }
